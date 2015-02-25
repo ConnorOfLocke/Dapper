@@ -4,30 +4,34 @@ using System.Collections;
 public class CameraMove : MonoBehaviour {
 
 	public GameObject FollowObject;
+	public float MoveDelay = 1.0f;
 	Vector3 CurPosition;
 	float yDistance = 0.0f;
+	float zDistance = 0.0f;
 
 	private Vector3 Velocity = Vector3.zero;
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 		CurPosition = FollowObject.transform.position;
 		Velocity = Vector3.zero;
-		yDistance = FollowObject.transform.position.y - transform.position.y;
-
+		yDistance = Mathf.Abs(FollowObject.transform.position.y - transform.position.y);
+		zDistance = Mathf.Abs(FollowObject.transform.position.z - transform.position.z);
 	}
 
 	// Update is called once per frame
 	void Update () {
 
 		Vector3 followPos = FollowObject.transform.position;
-		followPos.z = transform.position.z;
-		followPos.y -= yDistance;
+		followPos.y += yDistance;
+		followPos.z -= zDistance;
+		
 
 		Vector3 newPostion = Vector3.SmoothDamp(transform.position,
 		                                        followPos,
 		                                        ref Velocity,
-		                                        Time.deltaTime);
+		                                        MoveDelay);
 		transform.position = newPostion;
 	}
 }
