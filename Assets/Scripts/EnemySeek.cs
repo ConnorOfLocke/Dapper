@@ -9,7 +9,8 @@ public class EnemySeek : MonoBehaviour
 	public float DistanceToFollow = 2.0f;
 	public bool CanStopFollowing = true;
 	
-	public float PlayerAvoidRadius = 2.0f;
+	public float EntityAvoidRadius = 2.0f;
+	public float AvoidanceFactor = 0.001f;
 	
 	private MovingEntity AttachedScript;
 	
@@ -39,7 +40,6 @@ public class EnemySeek : MonoBehaviour
 				 						 new Vector2(transform.position.x, transform.position.z);
 				
 				
-				
 				Direction = Direction.normalized * Speed * Time.deltaTime;
 			
 				//adds velocity
@@ -51,7 +51,7 @@ public class EnemySeek : MonoBehaviour
 				{
 					newVelocity = newVelocity.normalized * MaxSpeed;
 				}
-				if (newVelocity.magnitude < 1 && Vector3.Distance(transform.position, Target.transform.position) < PlayerAvoidRadius)
+				if (newVelocity.magnitude < 1 && Vector3.Distance(transform.position, Target.transform.position) < EntityAvoidRadius)
 					newVelocity = Vector3.zero;
 				
 				AttachedScript.Velocity = newVelocity;
@@ -61,6 +61,28 @@ public class EnemySeek : MonoBehaviour
 				AttachedScript.Velocity = Vector3.zero;
 			}
 		}
+		//Vector3 shyness = Avoidance ();
+		//AttachedScript.Velocity += Avoidance() * AvoidanceFactor * Time.deltaTime;
 	}
+
+//SLOW AS BUTS
+//	Vector3 Avoidance()
+//	{
+//		MovingEntity[] Entities = FindObjectsOfType<MovingEntity>();
+//		Vector3 returnVector = Vector3.zero;
+//		
+//		foreach (MovingEntity Entity in Entities)
+//		{
+//			float Distance = Vector3.Distance( Entity.gameObject.transform.position, transform.position); 
+//			if (Distance < EntityAvoidRadius)
+//			{
+//				AttachedScript.Velocity += (transform.position - Entity.gameObject.transform.position) * (EntityAvoidRadius - Distance);
+//			}
+//		}
+//		if (returnVector.magnitude > 1)
+//			return returnVector.normalized;
+//		else
+//			return returnVector;
+//	}
 }
 

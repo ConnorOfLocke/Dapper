@@ -17,7 +17,8 @@ public class MovingEntity : MonoBehaviour {
 	void Update () {
 	
 		//updates our position 
-		transform.position += Velocity;
+		GetComponent<Rigidbody>().AddForce(Velocity);
+		//transform.position += Velocity;
 		//moves it back from the limits
 		if (transform.position.x < left_x_limit)
 			transform.position = new Vector3(left_x_limit, transform.position.y, transform.position.z);
