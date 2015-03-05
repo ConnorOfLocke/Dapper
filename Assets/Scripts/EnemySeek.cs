@@ -10,7 +10,7 @@ public class EnemySeek : MonoBehaviour
 	public bool CanStopFollowing = true;
 	
 	public float EntityAvoidRadius = 2.0f;
-	public float AvoidanceFactor = 0.001f;
+	public float AvoidanceFactor = 0.01f;
 	
 	private MovingEntity AttachedScript;
 	
@@ -51,10 +51,11 @@ public class EnemySeek : MonoBehaviour
 				{
 					newVelocity = newVelocity.normalized * MaxSpeed;
 				}
-				if (newVelocity.magnitude < 1 && Vector3.Distance(transform.position, Target.transform.position) < EntityAvoidRadius)
+				if (Vector3.Distance(transform.position, Target.transform.position) < EntityAvoidRadius)
 					newVelocity = Vector3.zero;
 				
 				AttachedScript.Velocity = newVelocity;
+
 			}
 			else
 			{
