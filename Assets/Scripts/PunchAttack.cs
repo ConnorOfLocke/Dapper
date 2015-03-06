@@ -3,7 +3,6 @@ using System.Collections;
 
 public class PunchAttack : MonoBehaviour {
 
-	
 	public float DistanceToSpawnPunch = 1.0f;
 	
 	public KeyCode PunchButton;
@@ -20,7 +19,15 @@ public class PunchAttack : MonoBehaviour {
 	private bool justPunched = false;
 	// Update is called once per frame
 	void Update () {
-		
+
+		//update direction facing
+		Vector3 curVelocity = GetComponent<MovingEntity> ().Velocity;
+		if (curVelocity.x > 0)
+			facing = DIRECTION.FACE_RIGHT;
+		else if (curVelocity.x < 0)
+			facing = DIRECTION.FACE_LEFT;
+
+
 		if (Input.GetKey(PunchButton) && !CurrentlyPunching)
 			CurrentlyPunching = true;
 
@@ -46,7 +53,6 @@ public class PunchAttack : MonoBehaviour {
                     PunchyAttack.Owner = this.gameObject;
 					PunchyAttack.Direction = facing;
 				}
-
 				justPunched = true;
 			}
 

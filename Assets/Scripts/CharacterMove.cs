@@ -4,13 +4,17 @@ using System.Collections;
 public class CharacterMove : MonoBehaviour {
 
 	public float speed = 2.5f;
+	public float dodgeSpeed = 1000.0f;
 	public float max_speed = 5.0f;
 	public float jump_velocity;
-	public float gravity;
 	public float friction = 1.0f;
 
 	private MovingEntity AttachedScript;
 	private bool m_is_jumping = false;
+
+	private bool IsDodging = false;
+	private float DodgeCoolDown = 1.0f;
+	private float DodgeTimer = 0.0f;
 
 
 	void Start()
@@ -23,6 +27,12 @@ public class CharacterMove : MonoBehaviour {
 	{
 		Vector3 Velocity = AttachedScript.Velocity;
 		Vector2 curHorizontalVelocity = new Vector2(Velocity.x, Velocity.z);
+
+		if (DodgeTimer > 0)
+			DodgeTimer -= Time.deltaTime;
+		else
+			IsDodging = false;
+
 		
 		//PC INPUT
 		if (Input.GetKey (KeyCode.LeftArrow) )
@@ -37,9 +47,20 @@ public class CharacterMove : MonoBehaviour {
 		if (Input.GetKey (KeyCode.DownArrow))
 			curHorizontalVelocity.y -= speed * Time.deltaTime * 0.5f;
 
+		if (Input.GetKey (KeyCode.LeftShift) && !IsDodging)
+		{
+			if (curHorizontalVelocity.x > 0)
+				curHorizontalVelocity.x += dodgeSpeed * Time.deltaTime;
+
+			if (curHorizontalVelocity.x < 0)
+				curHorizontalVelocity.x -= dodgeSpeed * Time.deltaTime;
+
+			DodgeTimer = DodgeCoolDown;
+			IsDodging = true;
+		}
 
 		//limits the horizontal velocity by maxspeed as a max Magnitude
-		if (curHorizontalVelocity.magnitude != 0)
+		if (curHorizontalVelocity.magnitude != 0 && !IsDodging)
 		{	
 			//clamps at maxSpeed
 			curHorizontalVelocity = Vector2.ClampMagnitude( curHorizontalVelocity, max_speed * Time.deltaTime);
@@ -54,7 +75,9 @@ public class CharacterMove : MonoBehaviour {
 			else
 				curHorizontalVelocity = Vector2.zero;
 		}
+
 		
+
 		
 		//Jump
 		if (Input.GetKey (KeyCode.Space) && !m_is_jumping)
@@ -63,18 +86,11 @@ public class CharacterMove : MonoBehaviour {
 			m_is_jumping = true;
 		}
 		
-		if (Velocity.y != 0)
+		if (Velocity.y == 0)
 		{
-			//decreases by gravity
-			if ( transform.position.y + (Velocity.y - gravity * Time.deltaTime) > AttachedScript.y_floor)
-				Velocity.y -= gravity * Time.deltaTime;
-			else
-			{
-				//rounds to y_floor and resets jump
-				Velocity.y = 0;
-				transform.position = new Vector3(transform.position.x, AttachedScript.y_floor, transform.position.z);
-				m_is_jumping = false;  
-			}
+			//rounds to y_floor and resets jump
+			transform.position = new Vector3(transform.position.x, AttachedScript.y_floor, transform.position.z);
+			m_is_jumping = false;  
 		}
 		//finally updates velocity
 		AttachedScript.Velocity = new Vector3(curHorizontalVelocity.x, Velocity.y, curHorizontalVelocity.y );		

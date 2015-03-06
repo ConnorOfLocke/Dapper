@@ -11,6 +11,8 @@ public class MovingEntity : MonoBehaviour {
 	public float right_x_limit;
 	public float left_x_limit;
 
+	public float gravity = 1.0f;
+
 	public float y_floor = 0;
 	
 	// Update is called once per frame
@@ -29,6 +31,16 @@ public class MovingEntity : MonoBehaviour {
 			transform.position = new Vector3(transform.position.x, transform.position.y, near_z_limit);
 		else if (transform.position.z > far_z_limit)
 			transform.position = new Vector3(transform.position.x, transform.position.y, far_z_limit);
-	
+
+		if (Velocity.y != 0)
+			Velocity.y -= gravity * Time.deltaTime;
+
+		if (transform.position.y < y_floor)
+		{
+			Velocity.y = 0;
+			transform.position = new Vector3(transform.position.x, y_floor, transform.position.z);
+		}
+		
+		
 	}
 }
