@@ -5,12 +5,13 @@ public class Entity : MonoBehaviour {
 
 	public float Health = 1.0f;
 	public GameObject[] HitParticles = null;
+	public bool isPlayer = false;
 	
 	private float FlashTimer = 0.0f;
 	
 	// Update is called once per frame
 	void Update () {
-		if (Health <= 0)
+		if (Health <= 0 && !isPlayer)
 			Destroy (this.gameObject);
 
 		if (FlashTimer >= 0) 

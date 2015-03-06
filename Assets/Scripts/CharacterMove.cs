@@ -13,7 +13,7 @@ public class CharacterMove : MonoBehaviour {
 	private bool m_is_jumping = false;
 
 	private bool IsDodging = false;
-	private float DodgeCoolDown = 1.0f;
+	private float DodgeCoolDown = 0.1f;
 	private float DodgeTimer = 0.0f;
 
 
@@ -47,7 +47,7 @@ public class CharacterMove : MonoBehaviour {
 		if (Input.GetKey (KeyCode.DownArrow))
 			curHorizontalVelocity.y -= speed * Time.deltaTime * 0.5f;
 
-		if (Input.GetKey (KeyCode.LeftShift) && !IsDodging)
+		if (Input.GetKey (KeyCode.LeftShift) && DodgeTimer <= 0)
 		{
 			if (curHorizontalVelocity.x > 0)
 				curHorizontalVelocity.x += dodgeSpeed * Time.deltaTime;
@@ -60,10 +60,13 @@ public class CharacterMove : MonoBehaviour {
 		}
 
 		//limits the horizontal velocity by maxspeed as a max Magnitude
-		if (curHorizontalVelocity.magnitude != 0 && !IsDodging)
+		if (curHorizontalVelocity.magnitude != 0)
 		{	
 			//clamps at maxSpeed
-			curHorizontalVelocity = Vector2.ClampMagnitude( curHorizontalVelocity, max_speed * Time.deltaTime);
+			if (!IsDodging)
+				curHorizontalVelocity = Vector2.ClampMagnitude( curHorizontalVelocity, max_speed * Time.deltaTime);
+			else
+				IsDodging = true;
 		
 			Vector2 friction_vec = (curHorizontalVelocity.normalized) * friction * Time.deltaTime;
 			if (m_is_jumping)
@@ -75,9 +78,6 @@ public class CharacterMove : MonoBehaviour {
 			else
 				curHorizontalVelocity = Vector2.zero;
 		}
-
-		
-
 		
 		//Jump
 		if (Input.GetKey (KeyCode.Space) && !m_is_jumping)

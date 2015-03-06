@@ -5,7 +5,6 @@ public class CameraMove : MonoBehaviour {
 
 	public GameObject FollowObject;
 	public float MoveDelay = 1.0f;
-	Vector3 CurPosition;
 	float yDistance = 0.0f;
 	float zDistance = 0.0f;
 
@@ -14,7 +13,6 @@ public class CameraMove : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		CurPosition = FollowObject.transform.position;
 		Velocity = Vector3.zero;
 		yDistance = Mathf.Abs(FollowObject.transform.position.y - transform.position.y);
 		zDistance = Mathf.Abs(FollowObject.transform.position.z - transform.position.z);

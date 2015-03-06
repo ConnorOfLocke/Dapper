@@ -36,6 +36,11 @@ public class TurnTable : MonoBehaviour {
 			
 			if (transform.rotation != RightFace  && facing == DIRECTION.FACE_RIGHT)
 				transform.rotation = Quaternion.RotateTowards(curRotation, RightFace, TurnSpeed * Time.deltaTime);
+				
+			if (transform.rotation.eulerAngles.y > 90) ///left
+				transform.localScale = new Vector3(-1 ,transform.localScale.y , transform.localScale.z);
+			else if (transform.rotation.eulerAngles.y < 90) //right
+				transform.localScale = new Vector3(1 ,transform.localScale.y , transform.localScale.z);
       	}
 		else
 		{
@@ -53,6 +58,13 @@ public class TurnTable : MonoBehaviour {
 
 			if (transform.rotation != RightFace  && facing == DIRECTION.FACE_RIGHT)
 				transform.rotation = Quaternion.RotateTowards(curRotation, RightFace, TurnSpeed * Time.deltaTime);
+				
+			if (transform.rotation.eulerAngles.y > 90) ///left
+				transform.localScale = new Vector3(-1 ,transform.localScale.y , transform.localScale.z);
+			else if (transform.rotation.eulerAngles.y < 90) //right
+				transform.localScale = new Vector3(1 ,transform.localScale.y , transform.localScale.z);
+				
+				
 		}
 			                                    
 
