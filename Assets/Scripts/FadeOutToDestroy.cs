@@ -12,13 +12,22 @@ public class FadeOutToDestroy : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
+		if (GetComponent<SpriteRenderer>() != null)
+		{
+			Color prevColor = GetComponent<SpriteRenderer>().color;
+			GetComponent<SpriteRenderer>().color = new Color(prevColor.r,
+													prevColor.g,
+													prevColor.b,
+													prevColor.a * (Timer / TimeToExist));
+		}
+		
 		if (GetComponent<Image>() != null)
 		{
 			Color prevColor = GetComponent<Image>().color;
 			GetComponent<Image>().color = new Color(prevColor.r,
-													prevColor.g,
-													prevColor.b,
-													prevColor.a * (Timer / TimeToExist));
+			                                        prevColor.g,
+			                                        prevColor.b,
+			                                        prevColor.a * (Timer / TimeToExist));
 		}
 		
 		Timer -= Time.deltaTime;

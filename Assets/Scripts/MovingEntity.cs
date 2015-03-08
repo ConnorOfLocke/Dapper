@@ -32,7 +32,7 @@ public class MovingEntity : MonoBehaviour {
 		else if (transform.position.z > far_z_limit)
 			transform.position = new Vector3(transform.position.x, transform.position.y, far_z_limit);
 
-		if (Velocity.y != 0)
+		if (transform.position.y > y_floor)
 			Velocity.y -= gravity * Time.deltaTime;
 
 		if (transform.position.y < y_floor)
