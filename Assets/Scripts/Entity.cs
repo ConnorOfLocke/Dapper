@@ -27,6 +27,17 @@ public class Entity : MonoBehaviour {
 	public void GetHit(float Damage, float FlashTime, DIRECTION HitDirection )
 	{
 		Health -= Damage;
+		if (Health < 0) Health = 0;
+		
+		ChainCounter Counter = FindObjectOfType<ChainCounter>();
+		if (Counter != null)
+		{
+			if (isPlayer)
+				Counter.Resetimmediately();
+			else
+				Counter.AddHit();
+		}
+		
 		FlashTimer = FlashTime;
 
 		if (HitParticles != null)

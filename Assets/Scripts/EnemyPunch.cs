@@ -23,11 +23,17 @@ public class EnemyPunch : MonoBehaviour {
 	void Update () {
 		
 		//update direction facing
-		Vector3 curVelocity = GetComponent<MovingEntity> ().Velocity;
-		if (curVelocity.x > 0)
+		if (GetComponent<EnemySeek>().Target.transform.position.x > transform.position.x)
 			facing = DIRECTION.FACE_RIGHT;
-		else if (curVelocity.x < 0)
+		else if (GetComponent<EnemySeek>().Target.transform.position.x < transform.position.x)
 			facing = DIRECTION.FACE_LEFT;
+		
+		//update direction facing
+		//Vector3 curVelocity = GetComponent<MovingEntity> ().Velocity;
+		//if (curVelocity.x > 0)
+		//	facing = DIRECTION.FACE_RIGHT;
+		//else if (curVelocity.x < 0)
+		//	facing = DIRECTION.FACE_LEFT;
 
 		if (InteruptTimer <= 0)
 		{
