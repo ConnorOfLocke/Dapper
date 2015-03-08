@@ -11,14 +11,25 @@ public class TurnTable : MonoBehaviour {
 	private Quaternion RightFace = Quaternion.identity;
 	private Quaternion LeftFace = Quaternion.identity;
 
+	bool TimeKeeping = false;
+	GlobalTimeKeeper TimeKeeper = null;
+
 	void Start ()
 	{
 		RightFace.SetLookRotation (new Vector3 (0, 0, -1));
 		LeftFace.SetLookRotation (new Vector3 (0, 0, 1));
+		TimeKeeper = FindObjectOfType<GlobalTimeKeeper>();
+		TimeKeeping = (TimeKeeper != null);
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void Update () {		
+	
+		float DeltaTime;
+		if (TimeKeeping)
+			DeltaTime = TimeKeeper.EntityDeltaTime;
+		else
+			DeltaTime = Time.deltaTime;
 	
 		if (AttachedObject != null)
 		{
@@ -32,10 +43,10 @@ public class TurnTable : MonoBehaviour {
 			Quaternion curRotation = transform.rotation;
 
 			if (transform.rotation != LeftFace && facing == DIRECTION.FACE_LEFT)
-				transform.rotation = Quaternion.RotateTowards(curRotation, LeftFace, TurnSpeed * Time.deltaTime);
+				transform.rotation = Quaternion.RotateTowards(curRotation, LeftFace, TurnSpeed * DeltaTime);
 			
 			if (transform.rotation != RightFace  && facing == DIRECTION.FACE_RIGHT)
-				transform.rotation = Quaternion.RotateTowards(curRotation, RightFace, TurnSpeed * Time.deltaTime);
+				transform.rotation = Quaternion.RotateTowards(curRotation, RightFace, TurnSpeed * DeltaTime);
 				
 			if (transform.rotation.eulerAngles.y > 90) ///left
 				transform.localScale = new Vector3(-1 ,transform.localScale.y , transform.localScale.z);
@@ -54,10 +65,10 @@ public class TurnTable : MonoBehaviour {
 			Quaternion curRotation = transform.rotation;
 			
 			if (transform.rotation != LeftFace && facing == DIRECTION.FACE_LEFT)
-				transform.rotation = Quaternion.RotateTowards(curRotation, LeftFace, TurnSpeed * Time.deltaTime);
+				transform.rotation = Quaternion.RotateTowards(curRotation, LeftFace, TurnSpeed * DeltaTime);
 
 			if (transform.rotation != RightFace  && facing == DIRECTION.FACE_RIGHT)
-				transform.rotation = Quaternion.RotateTowards(curRotation, RightFace, TurnSpeed * Time.deltaTime);
+				transform.rotation = Quaternion.RotateTowards(curRotation, RightFace, TurnSpeed * DeltaTime);
 				
 			if (transform.rotation.eulerAngles.y > 90) ///left
 				transform.localScale = new Vector3(-1 ,transform.localScale.y , transform.localScale.z);

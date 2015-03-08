@@ -15,12 +15,32 @@ public class MovingEntity : MonoBehaviour {
 
 	public float y_floor = 0;
 	
-	// Update is called once per frame
+	private bool TimeKeeping = false;
+	private GlobalTimeKeeper TimeKeeper = null;
+	
+	void Start ()
+	{
+		TimeKeeper = FindObjectOfType<GlobalTimeKeeper>();
+		TimeKeeping = (TimeKeeper != null);
+	}
+	
 	void Update () {
+	
+		float DeltaTime;
+		if (TimeKeeping)
+			DeltaTime = TimeKeeper.EntityDeltaTime;
+			
+		else
+			DeltaTime = Time.deltaTime;
+	
 	
 		//updates our position 
 		//GetComponent<Rigidbody>().AddForce(Velocity * 100);
-		transform.position += Velocity;
+		if (TimeKeeping)
+			transform.position += Velocity * TimeKeeper.CurDeltaRatio;
+		else
+			transform.position += Velocity;
+		
 		//moves it back from the limits
 		if (transform.position.x < left_x_limit)
 			transform.position = new Vector3(left_x_limit, transform.position.y, transform.position.z);
@@ -33,7 +53,7 @@ public class MovingEntity : MonoBehaviour {
 			transform.position = new Vector3(transform.position.x, transform.position.y, far_z_limit);
 
 		if (transform.position.y > y_floor)
-			Velocity.y -= gravity * Time.deltaTime;
+			Velocity.y -= gravity * DeltaTime;
 
 		if (transform.position.y < y_floor)
 		{

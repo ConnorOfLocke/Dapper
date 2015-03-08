@@ -17,6 +17,9 @@ public class PunchAttack : MonoBehaviour {
 	public float wind_up;
 	public float cool_down;
 	
+	private bool LightKeyDown = false;
+	private bool HeavyKeyDown = false;
+	
 	public DIRECTION facing = DIRECTION.FACE_LEFT;
 	
 	private bool CurrentlyPunching = false;
@@ -26,7 +29,6 @@ public class PunchAttack : MonoBehaviour {
 	private bool justPunched = false;
 	// Update is called once per frame
 	void Update () {
-
 		//update direction facing
 		Vector3 curVelocity = GetComponent<MovingEntity> ().Velocity;
 		if (curVelocity.x > 0)
@@ -36,13 +38,23 @@ public class PunchAttack : MonoBehaviour {
 
 		if (AttackType == ATTACK_TYPE.LIGHT_ATTACK)
 		{
-			if (Input.GetAxis("LightAttack") != 0 && !CurrentlyPunching)
+			if (Input.GetAxis("LightAttack") != 0 && !CurrentlyPunching && !LightKeyDown)
+			{
 				CurrentlyPunching = true;
+				LightKeyDown = true;
+			}
+			else if (Input.GetAxis("LightAttack") == 0 && LightKeyDown)
+				LightKeyDown = false;
 		}
 		else if (AttackType == ATTACK_TYPE.HEAVY_ATTACK)
 		{
-			if (Input.GetAxis("HeavyAttack") != 0 && !CurrentlyPunching)
+			if (Input.GetAxis("HeavyAttack") != 0 && !CurrentlyPunching && !HeavyKeyDown)
+			{
 				CurrentlyPunching = true;
+				HeavyKeyDown = true;
+			}
+			else if (Input.GetAxis("HeavyAttack") == 0 && !CurrentlyPunching && HeavyKeyDown)
+				HeavyKeyDown = false;
 		}
 
 		if (CurrentlyPunching)

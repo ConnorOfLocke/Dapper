@@ -6,6 +6,8 @@ public class EnemySeek : MonoBehaviour
 	public GameObject Target = null;
 	public float Speed = 0.8f;
 	public float MaxSpeed = 0.1f;
+	public float Friction = 0.5f;
+	
 	public float DistanceToFollow = 2.0f;
 	public bool CanStopFollowing = true;
 	
@@ -17,57 +19,72 @@ public class EnemySeek : MonoBehaviour
 
 	public float SeekCoolDownTimer = 1.0f;
 	private float SeekCoolDown = 0.0f;
-	// Use this for initialization
+	
+	private bool TimeKeeping = false;
+	private GlobalTimeKeeper TimeKeeper = null;
+	
 	void Start ()
 	{
 		AttachedScript = GetComponent<MovingEntity>();
+		TimeKeeper = FindObjectOfType<GlobalTimeKeeper>();
+		TimeKeeping = (TimeKeeper != null);
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-		if (Target != null)
+		float DeltaTime;
+		if (TimeKeeping)
+			DeltaTime = TimeKeeper.EntityDeltaTime;
+		else
+			DeltaTime = Time.deltaTime;
+	
+		if (DeltaTime != 0)
 		{
-			if (SeekCoolDown <= 0)
+			if (Target != null)
 			{
-				if (Vector3.Distance(transform.position, Target.transform.position) < DistanceToFollow)
-					isFollowing = true;
-				else if (CanStopFollowing)
-					isFollowing = false;
-					
-				if (isFollowing)
+				if (SeekCoolDown <= 0)
 				{
-					//gets the direction vector from the enemy position to the player * speed
-					Vector2 curDirection = new Vector2(AttachedScript.Velocity.x, AttachedScript.Velocity.z);
-
-					Vector2 newDirection = curDirection + 
-											(new Vector2(Target.transform.position.x, Target.transform.position.z) -
-					 						 new Vector2(transform.position.x, transform.position.z)).normalized * Speed;
-
-					//caps it at MaxSpeed
-					if (newDirection.magnitude > MaxSpeed)
+					if (Vector3.Distance(transform.position, Target.transform.position) < DistanceToFollow)
+						isFollowing = true;
+					else if (CanStopFollowing)
+						isFollowing = false;
+						
+					if (isFollowing)
 					{
-						newDirection = newDirection.normalized * MaxSpeed;
+						//gets the direction vector from the enemy position to the player * speed
+						Vector2 curDirection = new Vector2(AttachedScript.Velocity.x, AttachedScript.Velocity.z);
+	
+						Vector2 newDirection = curDirection + 
+												(new Vector2(Target.transform.position.x, Target.transform.position.z) -
+						 						 new Vector2(transform.position.x, transform.position.z)).normalized * Speed * DeltaTime;
+						 						 
+	
+						//caps it at MaxSpeed
+						if (newDirection.magnitude > MaxSpeed)
+						{
+							newDirection = newDirection.normalized * MaxSpeed;
+						}
+	
+						if (Vector3.Distance(transform.position, Target.transform.position) < EntityAvoidRadius)
+							newDirection = Vector2.zero;
+			
+					
+						//adds velocity
+						Vector3 newVelocity = new Vector3(	newDirection.x,
+															AttachedScript.Velocity.y,
+	                                             			newDirection.y );
+						AttachedScript.Velocity = newVelocity;
+	
 					}
-
-					if (Vector3.Distance(transform.position, Target.transform.position) < EntityAvoidRadius)
-						newDirection = Vector2.zero;
-		
-				
-					//adds velocity
-					Vector3 newVelocity = new Vector3(	newDirection.x,
-														AttachedScript.Velocity.y,
-                                             			newDirection.y );
-					AttachedScript.Velocity = newVelocity;
-
+					else
+					{
+						AttachedScript.Velocity = Vector3.zero;
+					}
 				}
 				else
-				{
-					AttachedScript.Velocity = Vector3.zero;
-				}
+					SeekCoolDown -= Time.deltaTime;
 			}
-			else
-				SeekCoolDown -= Time.deltaTime;
 		}
 		//Vector3 shyness = Avoidance ();
 		//AttachedScript.Velocity += Avoidance() * AvoidanceFactor * Time.deltaTime;

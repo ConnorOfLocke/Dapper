@@ -7,11 +7,23 @@ public class FadeOutToDestroy : MonoBehaviour {
 	public float TimeToExist = 1.0f;
 	private float Timer;
 	
+	private bool TimeKeeping = false;
+	private GlobalTimeKeeper TimeKeeper = null;
+	
 	void Start(){
 		Timer = TimeToExist;
+		TimeKeeper = FindObjectOfType<GlobalTimeKeeper>();
+		TimeKeeping = (TimeKeeper != null);
 	}
 	// Update is called once per frame
 	void Update () {
+	
+		float DeltaTime;
+		if (TimeKeeping)
+			DeltaTime = TimeKeeper.EntityDeltaTime;
+		else
+			DeltaTime = Time.deltaTime;
+	
 		if (GetComponent<SpriteRenderer>() != null)
 		{
 			Color prevColor = GetComponent<SpriteRenderer>().color;
@@ -30,7 +42,7 @@ public class FadeOutToDestroy : MonoBehaviour {
 			                                        prevColor.a * (Timer / TimeToExist));
 		}
 		
-		Timer -= Time.deltaTime;
+		Timer -= DeltaTime;
 		if (Timer <= 0)
 			Destroy(this.gameObject);
 	

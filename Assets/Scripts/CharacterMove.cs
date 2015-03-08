@@ -16,34 +16,44 @@ public class CharacterMove : MonoBehaviour {
 	private float DodgeCoolDown = 0.1f;
 	private float DodgeTimer = 0.0f;
 
+	private bool TimeKeeping = false;
+	private GlobalTimeKeeper TimeKeeper = null;
 
 	void Start()
 	{
 		AttachedScript = GetComponent<MovingEntity>();
+		TimeKeeper = FindObjectOfType<GlobalTimeKeeper>();
+		TimeKeeping = (TimeKeeper != null);
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
+		float DeltaTime;
+		if (TimeKeeping)
+			DeltaTime = TimeKeeper.EntityDeltaTime;
+		else
+			DeltaTime = Time.deltaTime;
+	
 		Vector3 Velocity = AttachedScript.Velocity;
 		Vector2 curHorizontalVelocity = new Vector2(Velocity.x, Velocity.z);
 
 		if (DodgeTimer > 0)
-			DodgeTimer -= Time.deltaTime;
+			DodgeTimer -= DeltaTime;
 		else
 			IsDodging = false;
 
 		//PC INPUT
 		curHorizontalVelocity.x = Input.GetAxis("Horizontal");
 		curHorizontalVelocity.y = Input.GetAxis("Vertical");
-
+ 
 		if (Input.GetKey (KeyCode.LeftShift) && DodgeTimer <= 0)
 		{
 			if (curHorizontalVelocity.x > 0)
-				curHorizontalVelocity.x += dodgeSpeed * Time.deltaTime;
+				curHorizontalVelocity.x += dodgeSpeed * DeltaTime;
 
 			if (curHorizontalVelocity.x < 0)
-				curHorizontalVelocity.x -= dodgeSpeed * Time.deltaTime;
+				curHorizontalVelocity.x -= dodgeSpeed * DeltaTime;
 
 			DodgeTimer = DodgeCoolDown;
 			IsDodging = true;
@@ -54,16 +64,16 @@ public class CharacterMove : MonoBehaviour {
 		{	
 			//clamps at maxSpeed
 			if (!IsDodging)
-				curHorizontalVelocity = Vector2.ClampMagnitude( curHorizontalVelocity, max_speed * Time.deltaTime);
+				curHorizontalVelocity = Vector2.ClampMagnitude( curHorizontalVelocity, max_speed * DeltaTime);
 			else
 				IsDodging = true;
 		
-			Vector2 friction_vec = (curHorizontalVelocity.normalized) * friction * Time.deltaTime;
+			Vector2 friction_vec = (curHorizontalVelocity.normalized) * friction * DeltaTime;
 			if (m_is_jumping)
 				friction_vec *= 2;
 				
 			//substracts friction
-			if (curHorizontalVelocity.magnitude - friction * Time.deltaTime > 0)
+			if (curHorizontalVelocity.magnitude - friction * DeltaTime > 0)
 				curHorizontalVelocity -= friction_vec;
 			else
 				curHorizontalVelocity = Vector2.zero;

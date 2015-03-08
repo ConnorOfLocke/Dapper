@@ -19,8 +19,23 @@ public class EnemyPunch : MonoBehaviour {
 	private bool justPunched = false;
 
 	private float InteruptTimer = 0.0f;
-	// Update is called once per frame
+	
+	private bool TimeKeeping = false;
+	private GlobalTimeKeeper TimeKeeper = null;
+	
+	void Start()
+	{
+		TimeKeeper = FindObjectOfType<GlobalTimeKeeper>();
+		TimeKeeping = (TimeKeeper != null);
+	}
+	
 	void Update () {
+		
+		float DeltaTime;
+		if (TimeKeeping)
+			DeltaTime = TimeKeeper.EntityDeltaTime;
+		else
+			DeltaTime = Time.deltaTime;
 		
 		//update direction facing
 		if (GetComponent<EnemySeek>().Target.transform.position.x > transform.position.x)
@@ -79,11 +94,11 @@ public class EnemyPunch : MonoBehaviour {
 					justPunched = true;
 				}
 				
-				PunchTimer += Time.deltaTime;
+				PunchTimer += DeltaTime;
 			}
 		}
 		else
-			InteruptTimer -= Time.deltaTime;
+			InteruptTimer -= DeltaTime;
 	}
 
 	public void Interupt(float timeToCoolOff)
