@@ -3,6 +3,13 @@ using System.Collections;
 
 public class PunchAttack : MonoBehaviour {
 
+	public enum ATTACK_TYPE
+	{
+		LIGHT_ATTACK,
+		HEAVY_ATTACK
+	};
+
+	public ATTACK_TYPE AttackType = ATTACK_TYPE.LIGHT_ATTACK;
 	public float DistanceToSpawnPunch = 1.0f;
 	
 	public KeyCode PunchButton;
@@ -27,9 +34,16 @@ public class PunchAttack : MonoBehaviour {
 		else if (curVelocity.x < 0)
 			facing = DIRECTION.FACE_LEFT;
 
-
-		if (Input.GetKey(PunchButton) && !CurrentlyPunching)
-			CurrentlyPunching = true;
+		if (AttackType == ATTACK_TYPE.LIGHT_ATTACK)
+		{
+			if (Input.GetAxis("LightAttack") != 0 && !CurrentlyPunching)
+				CurrentlyPunching = true;
+		}
+		else if (AttackType == ATTACK_TYPE.HEAVY_ATTACK)
+		{
+			if (Input.GetAxis("HeavyAttack") != 0 && !CurrentlyPunching)
+				CurrentlyPunching = true;
+		}
 
 		if (CurrentlyPunching)
 		{

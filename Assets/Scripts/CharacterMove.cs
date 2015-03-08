@@ -33,19 +33,9 @@ public class CharacterMove : MonoBehaviour {
 		else
 			IsDodging = false;
 
-		
 		//PC INPUT
-		if (Input.GetKey (KeyCode.LeftArrow) )
-			curHorizontalVelocity.x -= speed * Time.deltaTime;
-		
-		if (Input.GetKey (KeyCode.RightArrow))
-			curHorizontalVelocity.x += speed * Time.deltaTime;
-
-		if (Input.GetKey (KeyCode.UpArrow))
-			curHorizontalVelocity.y += speed * Time.deltaTime * 0.5f;
-
-		if (Input.GetKey (KeyCode.DownArrow))
-			curHorizontalVelocity.y -= speed * Time.deltaTime * 0.5f;
+		curHorizontalVelocity.x = Input.GetAxis("Horizontal");
+		curHorizontalVelocity.y = Input.GetAxis("Vertical");
 
 		if (Input.GetKey (KeyCode.LeftShift) && DodgeTimer <= 0)
 		{
@@ -80,7 +70,7 @@ public class CharacterMove : MonoBehaviour {
 		}
 		
 		//Jump
-		if (Input.GetKey (KeyCode.Space) && !m_is_jumping)
+		if (Input.GetAxis("Jump") != 0 && !m_is_jumping)
 		{
 			Velocity.y += jump_velocity; 
 			m_is_jumping = true;
