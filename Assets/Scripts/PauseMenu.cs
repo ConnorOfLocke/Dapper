@@ -50,6 +50,11 @@ public class PauseMenu : MonoBehaviour {
 				MainMenuButton.interactable = false;
 				
 				FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+				FindObjectOfType<CharacterMove>().LockMovement = false;
+
+				PunchAttack[] Punches = FindObjectsOfType<PunchAttack>();
+				foreach (PunchAttack Attack in Punches)
+					Attack.LockAttack = false;
 			}
 			else
 			{
@@ -67,6 +72,12 @@ public class PauseMenu : MonoBehaviour {
 				MainMenuButton.interactable = true;
 				
 				FindObjectOfType<EventSystem>().SetSelectedGameObject(ContinueButton.gameObject);
+
+				FindObjectOfType<CharacterMove>().LockMovement  = true;
+
+				PunchAttack[] Punches = FindObjectsOfType<PunchAttack>();
+				foreach (PunchAttack Attack in Punches)
+					Attack.LockAttack = true;
 			}
 			ButtonPress = true;
 		}

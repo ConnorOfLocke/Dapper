@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 
 public class StartMenu : MonoBehaviour {
@@ -11,7 +12,7 @@ public class StartMenu : MonoBehaviour {
 
 	private Quaternion InActiveRotation = Quaternion.identity;
 	public float TimeToRotate = 1.0f;
-	float CurTimeRotating = 0.0f;
+	private float CurTimeRotating = 0.0f;
 	
 	// Use this for initialization
 	void Start () {

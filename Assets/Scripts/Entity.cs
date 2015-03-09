@@ -8,7 +8,9 @@ public class Entity : MonoBehaviour {
 	public bool isPlayer = false;
 	
 	private float FlashTimer = 0.0f;
-	
+
+	private bool BlockPossible;
+
 	// Update is called once per frame
 	void Update () {
 		if (Health <= 0 && !isPlayer)
@@ -21,11 +23,22 @@ public class Entity : MonoBehaviour {
 			
 		}
 		else
+		{
+			if (this.GetComponent<SpriteRenderer>().color == Color.red)
 			this.GetComponent<SpriteRenderer>().color = Color.white;
+		}
+
+		BlockPossible = (GetComponent<CharacterBlock> () != null);
 	}
 
 	public void GetHit(float Damage, float FlashTime, DIRECTION HitDirection )
 	{
+		if (BlockPossible)
+		{
+			if (GetComponent<CharacterBlock>().IsBlocking)
+				return;
+		}
+
 		Health -= Damage;
 		if (Health < 0) Health = 0;
 		

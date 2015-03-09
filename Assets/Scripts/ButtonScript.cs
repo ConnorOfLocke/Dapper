@@ -9,6 +9,7 @@ public class ButtonScript : MonoBehaviour {
 		BUTTON_QUIT,
 		BUTTON_CONTINUE,
 		BUTTON_MAIN_MENU,
+		BUTTON_MAIN_MENU_END,
 	};
 	
 
@@ -34,6 +35,10 @@ public class ButtonScript : MonoBehaviour {
 			case BUTTON_FUNCTION.BUTTON_MAIN_MENU:
 				FindObjectOfType<PauseMenu>().ConfirmMainMenu();
 			break; 
+
+		case BUTTON_FUNCTION.BUTTON_MAIN_MENU_END:
+				Application.LoadLevel("MenuScene");
+			break;
 		};
 	}
 }

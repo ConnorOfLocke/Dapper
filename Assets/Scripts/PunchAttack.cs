@@ -27,7 +27,10 @@ public class PunchAttack : MonoBehaviour {
 	
 	public GameObject PunchObject;
 	private bool justPunched = false;
-	// Update is called once per frame
+
+	public bool LockAttack = false;
+
+
 	void Update () {
 		//update direction facing
 		Vector3 curVelocity = GetComponent<MovingEntity> ().Velocity;
@@ -36,53 +39,56 @@ public class PunchAttack : MonoBehaviour {
 		else if (curVelocity.x < 0)
 			facing = DIRECTION.FACE_LEFT;
 
-		if (AttackType == ATTACK_TYPE.LIGHT_ATTACK)
+		if (!LockAttack)
 		{
-			if (Input.GetAxis("LightAttack") != 0 && !CurrentlyPunching && !LightKeyDown)
+			if (AttackType == ATTACK_TYPE.LIGHT_ATTACK)
 			{
-				CurrentlyPunching = true;
-				LightKeyDown = true;
-			}
-			else if (Input.GetAxis("LightAttack") == 0 && LightKeyDown)
-				LightKeyDown = false;
-		}
-		else if (AttackType == ATTACK_TYPE.HEAVY_ATTACK)
-		{
-			if (Input.GetAxis("HeavyAttack") != 0 && !CurrentlyPunching && !HeavyKeyDown)
-			{
-				CurrentlyPunching = true;
-				HeavyKeyDown = true;
-			}
-			else if (Input.GetAxis("HeavyAttack") == 0 && !CurrentlyPunching && HeavyKeyDown)
-				HeavyKeyDown = false;
-		}
-
-		if (CurrentlyPunching)
-		{
-			if (PunchTimer > wind_up + cool_down)			
-			{
-				CurrentlyPunching = false;
-				PunchTimer = 0.0f;
-				justPunched = false;
-			}
-			else if (PunchTimer > wind_up && !justPunched)
-			{
-                GameObject Punchy;
-				if (facing == DIRECTION.FACE_LEFT)
-                    Punchy = GameObject.Instantiate(PunchObject, transform.position - new Vector3(DistanceToSpawnPunch, 0, 0), Quaternion.identity) as GameObject;
-			    else
-                    Punchy = GameObject.Instantiate(PunchObject, transform.position + new Vector3(DistanceToSpawnPunch, 0, 0), Quaternion.identity) as GameObject;
-
-                Attack PunchyAttack = Punchy.GetComponent<Attack>();
-                if (PunchyAttack != null)
+				if (Input.GetAxis("LightAttack") != 0 && !CurrentlyPunching && !LightKeyDown)
 				{
-                    PunchyAttack.Owner = this.gameObject;
-					PunchyAttack.Direction = facing;
+					CurrentlyPunching = true;
+					LightKeyDown = true;
 				}
-				justPunched = true;
+				else if (Input.GetAxis("LightAttack") == 0 && LightKeyDown)
+					LightKeyDown = false;
+			}
+			else if (AttackType == ATTACK_TYPE.HEAVY_ATTACK)
+			{
+				if (Input.GetAxis("HeavyAttack") != 0 && !CurrentlyPunching && !HeavyKeyDown)
+				{
+					CurrentlyPunching = true;
+					HeavyKeyDown = true;
+				}
+				else if (Input.GetAxis("HeavyAttack") == 0 && !CurrentlyPunching && HeavyKeyDown)
+					HeavyKeyDown = false;
 			}
 
-			PunchTimer += Time.deltaTime;
+			if (CurrentlyPunching)
+			{
+				if (PunchTimer > wind_up + cool_down)			
+				{
+					CurrentlyPunching = false;
+					PunchTimer = 0.0f;
+					justPunched = false;
+				}
+				else if (PunchTimer > wind_up && !justPunched)
+				{
+	                GameObject Punchy;
+					if (facing == DIRECTION.FACE_LEFT)
+	                    Punchy = GameObject.Instantiate(PunchObject, transform.position - new Vector3(DistanceToSpawnPunch, 0, 0), Quaternion.identity) as GameObject;
+				    else
+	                    Punchy = GameObject.Instantiate(PunchObject, transform.position + new Vector3(DistanceToSpawnPunch, 0, 0), Quaternion.identity) as GameObject;
+
+	                Attack PunchyAttack = Punchy.GetComponent<Attack>();
+	                if (PunchyAttack != null)
+					{
+	                    PunchyAttack.Owner = this.gameObject;
+						PunchyAttack.Direction = facing;
+					}
+					justPunched = true;
+				}
+
+				PunchTimer += Time.deltaTime;
+			}
 		}
 	}
 
