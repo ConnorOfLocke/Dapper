@@ -21,6 +21,8 @@ public class PauseMenu : MonoBehaviour {
 	public Button MainMenuButton;
 
 	public string[] PauseMessages;
+
+	public Entity Player = null;
 		
 	private float curTimeRotating = 0.0f;
 	// Use this for initialization
@@ -37,24 +39,27 @@ public class PauseMenu : MonoBehaviour {
 		{
 			if (Active)
 			{
-				Active = false;
-				curTimeRotating = 0;
-				GlobalTimeKeeper TimeKeeper =  FindObjectOfType<GlobalTimeKeeper>();
-				if (TimeKeeper != null)
-					TimeKeeper.UnPause();
+				if (Player.Health > 0)
+				{
+					Active = false;
+					curTimeRotating = 0;
+					GlobalTimeKeeper TimeKeeper =  FindObjectOfType<GlobalTimeKeeper>();
+					if (TimeKeeper != null)
+						TimeKeeper.UnPause();
+						
+					ContinueButton.enabled = false;
+					MainMenuButton.enabled = false;
 					
-				ContinueButton.enabled = false;
-				MainMenuButton.enabled = false;
-				
-				ContinueButton.interactable = false;
-				MainMenuButton.interactable = false;
-				
-				FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
-				FindObjectOfType<CharacterMove>().LockMovement = false;
+					ContinueButton.interactable = false;
+					MainMenuButton.interactable = false;
+					
+					FindObjectOfType<EventSystem>().SetSelectedGameObject(null);
+					FindObjectOfType<CharacterMove>().LockMovement = false;
 
-				PunchAttack[] Punches = FindObjectsOfType<PunchAttack>();
-				foreach (PunchAttack Attack in Punches)
-					Attack.LockAttack = false;
+					PunchAttack[] Punches = FindObjectsOfType<PunchAttack>();
+					foreach (PunchAttack Attack in Punches)
+						Attack.LockAttack = false;
+				}
 			}
 			else
 			{
@@ -78,6 +83,7 @@ public class PauseMenu : MonoBehaviour {
 				PunchAttack[] Punches = FindObjectsOfType<PunchAttack>();
 				foreach (PunchAttack Attack in Punches)
 					Attack.LockAttack = true;
+
 			}
 			ButtonPress = true;
 		}

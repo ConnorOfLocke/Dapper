@@ -25,6 +25,8 @@ public class EndMenu : MonoBehaviour {
 		
 		RetryButton.interactable = false;
 		MainMenuButton.interactable = false;
+
+
 	}
 	
 	void Update () 
@@ -40,6 +42,13 @@ public class EndMenu : MonoBehaviour {
 				                                           SlerpRatio);
 				CurTimeRotating += Time.deltaTime;
 			}
+
+			FindObjectOfType<CharacterMove>().LockMovement = true;
+			
+			PunchAttack[] Punches = FindObjectsOfType<PunchAttack>();
+			foreach (PunchAttack Attack in Punches)
+				Attack.LockAttack = true;
+
 		}
 		else
 		{
@@ -55,7 +64,7 @@ public class EndMenu : MonoBehaviour {
 				
 				FindObjectOfType<EventSystem>().SetSelectedGameObject(RetryButton.gameObject);
 
-				FindObjectOfType<CharacterMove>().LockMovement  = true;
+				FindObjectOfType<CharacterMove>().LockMovement = true;
 				
 				PunchAttack[] Punches = FindObjectsOfType<PunchAttack>();
 				foreach (PunchAttack Attack in Punches)

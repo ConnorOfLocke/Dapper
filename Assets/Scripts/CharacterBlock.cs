@@ -18,12 +18,14 @@ public class CharacterBlock : MonoBehaviour {
 	private GameObject CurrentBlockEffect = null;
 
 	private Color OriginalColor;
+	private Renderer AttachedMesh;
 
 	void Start () 
 	{
 		TimeKeeper = FindObjectOfType<GlobalTimeKeeper>();
 		TimeKeeping = (TimeKeeper != null);
-		OriginalColor = GetComponent<SpriteRenderer> ().color;
+		AttachedMesh = GetComponentInChildren<Renderer> ();
+		OriginalColor = AttachedMesh.material.color;
 	}
 
 	void Update () {
@@ -36,13 +38,13 @@ public class CharacterBlock : MonoBehaviour {
 
 		if (BlockTimer - BlockCoolDown > 0)
 		{
-			GetComponent<SpriteRenderer>().color = Color.blue;
+			AttachedMesh.material.color = Color.blue;
 			BlockTimer -= DeltaTime;
 		}
 		else if (BlockTimer > 0)
 		{
-			if (GetComponent<SpriteRenderer>().color == Color.blue)
-				GetComponent<SpriteRenderer>().color = OriginalColor;
+			if (AttachedMesh.material.color == Color.blue)
+				AttachedMesh.material.color = OriginalColor;
 			BlockTimer -= DeltaTime;
 		}
 

@@ -30,7 +30,6 @@ public class StartMenu : MonoBehaviour {
 		
 		if (TimeToStart <= 0)
 		{
-			
 			GlobalTimeKeeper TimeKeeper =  FindObjectOfType<GlobalTimeKeeper>();
 			if (TimeKeeper != null)
 				TimeKeeper.UnPause();

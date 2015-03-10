@@ -83,6 +83,7 @@ public class PunchAttack : MonoBehaviour {
 					{
 	                    PunchyAttack.Owner = this.gameObject;
 						PunchyAttack.Direction = facing;
+						PunchyAttack.transform.rotation = transform.rotation;
 					}
 					justPunched = true;
 				}

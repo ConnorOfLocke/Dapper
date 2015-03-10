@@ -11,6 +11,13 @@ public class Entity : MonoBehaviour {
 
 	private bool BlockPossible;
 
+	private Renderer EntityShader;
+
+	void Start()
+	{
+		EntityShader = GetComponentInChildren<Renderer> ();
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (Health <= 0 && !isPlayer)
@@ -18,14 +25,14 @@ public class Entity : MonoBehaviour {
 
 		if (FlashTimer >= 0) 
 		{
-			this.GetComponent<SpriteRenderer>().color = Color.red;
+			//this.GetComponent<SpriteRenderer>().color = Color.red;
+			EntityShader.material.color = Color.red;
 			FlashTimer -= Time.deltaTime;
-			
 		}
 		else
 		{
-			if (this.GetComponent<SpriteRenderer>().color == Color.red)
-			this.GetComponent<SpriteRenderer>().color = Color.white;
+			if (EntityShader.material.color == Color.red)
+				EntityShader.material.color = Color.white;
 		}
 
 		BlockPossible = (GetComponent<CharacterBlock> () != null);
@@ -59,12 +66,12 @@ public class Entity : MonoBehaviour {
 			{
 				if (HitDirection == DIRECTION.FACE_LEFT)
 				{
-					Quaternion Left = Quaternion.LookRotation(new Vector3(-1, 0, 0));
+					Quaternion Left = Quaternion.LookRotation(new Vector3(-1, 0, -0.001f));
 					GameObject.Instantiate(thing, transform.position + new Vector3(0, 1, 0), Left);
 				}
 				else if (HitDirection == DIRECTION.FACE_RIGHT)
 				{
-					Quaternion Right = Quaternion.LookRotation(new Vector3(1, 0, 0));
+					Quaternion Right = Quaternion.LookRotation(new Vector3(1, 0, -0.001f));
 					GameObject.Instantiate(thing, transform.position + new Vector3(0, 1, 0), Right);
 				}
 						
